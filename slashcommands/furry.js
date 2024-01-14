@@ -10,6 +10,7 @@ module.exports = {
     //Command name and description
     .setName("furry")
     .setDescription("Searches for a furry image in safebooru")
+    .setDMPermission(false)
     //Command tag option
     .addStringOption(option => 
         option.setName("tags")

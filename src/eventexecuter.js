@@ -54,6 +54,7 @@ async function Eventexecuter(client){
         try {
             await slashComs.run(client, interaction);
         } catch (e) {
+            console.log("Error running slash command: ", interaction.commandName);
             console.log(e);
         }
     });

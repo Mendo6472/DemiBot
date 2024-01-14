@@ -29,7 +29,7 @@ async function handleAFK(message, afk) {
     }
 
     if (amountOfAfkUsersMentioned === 1) {
-        message.channel.send(`${mentionedAfkUser.username} is AFK: ${afk[mentionedAfkUser.userId]}`);
+        message.channel.send(`${mentionedAfkUser.username} is AFK: ${afk[mentionedAfkUser.id]}`);
     } else if (amountOfAfkUsersMentioned > 1) {
         message.channel.send("Multiple users that you have mentioned are AFK.");
     }

@@ -8,17 +8,18 @@ module.exports = {
     //Command name and description
     .setName("avatar")
     .setDescription("Get your avatar or someone else's")
+    .setDMPermission(false)
     //Command user option
     .addUserOption(option =>
         option
-        .setName('usuario')
+        .setName('user')
         .setDescription('User to get the avatar from (Leave empty for your own avatar)')
         .setRequired(false)),
     async run(client, interaction) {
         //Defering reply to avoid timeout
         await interaction.deferReply()
-        //Target will be the user inputed into the "usuario" option on the interaction
-        var target = interaction.options.getUser('usuario');
+        //Target will be the user inputed into the "user" option on the interaction
+        var target = interaction.options.getUser('user');
         //If they didn't choose any user, the target will be the same user who used the interaction
         if(target == null) target = interaction.user;
         //Avatar to display in embed

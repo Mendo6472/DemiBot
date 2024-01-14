@@ -8,6 +8,7 @@ module.exports = {
     //Command name and description
     .setName("afk")
     .setDescription("Tell everyone you're afk and left a message")
+    .setDMPermission(false)
     //Command tag option
     .addStringOption(option => 
         option.setName("message")

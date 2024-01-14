@@ -6,7 +6,8 @@ require("moment-duration-format")
 module.exports = {
     data: new Discord.SlashCommandBuilder()
     .setName("uptime")
-    .setDescription("Shows the ammount of time that Silly Bot has been active for"),
+    .setDescription("Shows the ammount of time that Silly Bot has been active for")
+    .setDMPermission(false),
     async run(client, interaction) {
         const actividad = moment.duration(client.uptime).format(" D [Days], H [Hours], m [Minutes], s [Seconds]");
         const embeduptime = new Discord.EmbedBuilder()
