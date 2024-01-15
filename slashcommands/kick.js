@@ -27,6 +27,7 @@ module.exports = {
         // Creating an embed to send errors
         const errorEmbed = new Discord.EmbedBuilder()
             .setTitle("❌ | Error")
+            .setColor("#fc0000")
 
         const target = interaction.options.getUser("user");
         const reason = interaction.options.getString("reason") || "No reason provided";
@@ -75,7 +76,8 @@ module.exports = {
       
             await interaction.editReply({ embeds: [kickEmbed] })
           } catch (error) {
-            await interaction.editReply({ content: "An error has ocurred when trying to kick this user", ephemeral: true })
+            errorEmbed.setDescription("An error has ocurred when trying to kick this user")
+            await interaction.editReply({ embeds:[errorEmbed], ephemeral: true })
             console.error(error)
           }
     }

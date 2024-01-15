@@ -10,7 +10,7 @@ module.exports = {
     .setDescription("Add an special level to the rank system")
     .setDefaultMemberPermissions(Discord.PermissionFlagsBits.ManageRoles)
     .setDMPermission(false)
-    //Command tag option
+    //Level and role options
     .addIntegerOption(  option =>
         option.setName("level")
         .setDescription("Level to add to the rank system")
@@ -22,6 +22,11 @@ module.exports = {
     async run(client, interaction) {
         //Defering reply to avoid timeout
         await interaction.deferReply()
+
+        // Creating an embed to send errors
+        const errorEmbed = new Discord.EmbedBuilder()
+            .setTitle("❌ | Error")
+            .setColor("#fc0000")
         
         //Get the level and the role from the interaction
         var level = interaction.options.getInteger("level")
@@ -33,25 +38,33 @@ module.exports = {
         var levels = JSON.parse(levelsFile)
         //Check if the level is already in the rank system
         if(levels[level] != null){
-            await interaction.editReply({ content: "That level is already in the rank system!", ephemeral: true });
-            return
+            errorEmbed.setDescription("That level is already in the rank system!");
+            return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
         }
         //Check if the role is managed (A bot's role or a weebhook's role)
         if(role.managed){
-            await interaction.editReply({ content: "You can't add this role to the rank system!", ephemeral: true });
-            return
+            errorEmbed.setDescription("You can't add this role to the rank system!");
+            return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
         }
         //Check if the role is higher than the bot's highest role
         if(role.rawPosition >= interaction.guild.members.me.roles.highest.position){
-            await interaction.editReply({ content: "I can't add this role to the rank system!", ephemeral: true });
-            return
+            errorEmbed.setDescription("I can't add this role to the rank system!");
+            return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
+        }
+        //Check if the role is already on the rank system
+        if(Object.values(levels).includes(role.id)){
+            errorEmbed.setDescription("That role is already in the rank system!");
+            return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
         }
         //Add the level to the rank system
         levels[level] = role.id
-        console.log(role)
         //Save the file
         fs.writeFileSync("./db/levels.json", JSON.stringify(levels))
         //Confirm the level
-        await interaction.editReply("Level " + level + " added to the rank system");    
+        const confirmEmbed = new Discord.EmbedBuilder()
+            .setTitle("✅ | Success")
+            .setColor("#00fc3b")
+            .setDescription("Level " + level + " added to the rank system")
+        await interaction.editReply({embeds:[confirmEmbed]});    
     }
 }
