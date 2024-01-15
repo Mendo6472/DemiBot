@@ -20,11 +20,6 @@ module.exports = {
         .setDescription("Role to give to the user when leveling up to the level")
         .setRequired(true)),
     async run(client, interaction) {
-        //If the user is not an admin, alert them
-        if(!interaction.member.permissions.has("ADMINISTRATOR")){
-            await interaction.reply({ content: "You don't have the permissions to use this command!", ephemeral: true });
-            return
-        }
         //Defering reply to avoid timeout
         await interaction.deferReply()
         
@@ -44,7 +39,7 @@ module.exports = {
         //Add the level to the rank system
         levels[level] = role.id
         //Save the file
-        fs.writeFileSync("./db/rank.json", JSON.stringify(rank))
+        fs.writeFileSync("./db/levels.json", JSON.stringify(levels))
         //Confirm the level
         await interaction.editReply("Level " + level + " added to the rank system");    
     }
