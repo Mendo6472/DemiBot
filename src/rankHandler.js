@@ -32,15 +32,18 @@ async function handleRank(message, ranks){
         ranks[message.author.id].xp = 0;
         ranks[message.author.id].nextLevelXp = ((userLevel + 11) * 2) ** 2;
         let levels = JSON.parse(fs.readFileSync("./db/levels.json"));
-        if(levels[newLevel]){
-            message.member.roles.add(levels[newLevel]);
-        }
         message.reply(`You leveled up to level ${ranks[message.author.id].level}`);   
+        fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
+            if(err) console.log(err);
+        });
+        if(levels[newLevel]){
+            let newRole = message.guild.roles.cache.get(levels[newLevel]);
+            if(newRole == null) return;
+            if(message.member.roles.cache.has(newRole.id)) return;
+            if(role.rawPosition >= interaction.guild.members.me.roles.highest.position) return;
+            message.member.roles.add(newRole);
+        }
     }
-
-    fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
-        if(err) console.log(err);
-    });
 }
 
 async function getPlayerRank(userId, ranks) {
