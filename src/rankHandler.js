@@ -27,9 +27,14 @@ async function handleRank(message, ranks){
 
     //Calculate player level
     if(nextLevelXp <= userXp){
-        ranks[message.author.id].level++;
+        let newLevel = ranks[message.author.id].level + 1;
+        ranks[message.author.id].level = newLevel;
         ranks[message.author.id].xp = 0;
         ranks[message.author.id].nextLevelXp = ((userLevel + 11) * 2) ** 2;
+        let levels = JSON.parse(fs.readFileSync("./db/levels.json"));
+        if(levels[newLevel]){
+            message.member.roles.add(levels[newLevel]);
+        }
         message.reply(`You leveled up to level ${ranks[message.author.id].level}`);   
     }
 
