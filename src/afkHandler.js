@@ -4,9 +4,12 @@ const afkPath = "./db/afk.json"
 // Function to handle AFK related logic
 async function handleAFK(message, afk) {
     // Check if afk user talked
-    if (afk[message.author.id] != null) {
+    if (afk[message.guild.id] == null) {
+        return;
+    }
+    if (afk[message.guild.id][message.author.id] != null) {
         // If they are, remove them from the afk list
-        delete afk[message.author.id];
+        delete afk[message.guild.id][message.author.id];
         // Save the file
         fs.writeFileSync(afkPath, JSON.stringify(afk));
         // Alert the user

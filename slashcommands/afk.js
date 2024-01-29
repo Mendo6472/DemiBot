@@ -28,13 +28,16 @@ module.exports = {
         //Parse the file
         var afk = JSON.parse(afkFile)
         //Check if the user is already afk
-        if(afk[interaction.user.id] != null){
+        if(afk[interaction.guildId] == null){
+            afk[interaction.guildId] = {}
+        }
+        if(afk[interaction.guildId][interaction.user.id] != null){
             //If they are, alert them
             await interaction.editReply({ content: "You're already afk!", ephemeral: true });
             return
         }
         //Add the user to the afk list
-        afk[interaction.user.id] = message
+        afk[interaction.guildId][interaction.user.id] = message
         //Save the file
         fs.writeFileSync("./db/afk.json", JSON.stringify(afk))
         //Confirm the afk
