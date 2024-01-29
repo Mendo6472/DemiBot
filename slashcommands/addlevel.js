@@ -31,13 +31,18 @@ module.exports = {
         //Get the level and the role from the interaction
         var level = interaction.options.getInteger("level")
         var role = interaction.options.getRole("role")
+        var guild = interaction.guildId
 
         //Get the levels file
         var levelsFile = fs.readFileSync("./db/levels.json")
         //Parse the file
         var levels = JSON.parse(levelsFile)
+        //Check if the server is already in the rank system
+        if(levels[guild] == null){
+            levels[guild] = {}
+        }
         //Check if the level is already in the rank system
-        if(levels[level] != null){
+        if(levels[guild][level] != null){
             errorEmbed.setDescription("That level is already in the rank system!");
             return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
         }
@@ -57,7 +62,7 @@ module.exports = {
             return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
         }
         //Add the level to the rank system
-        levels[level] = role.id
+        levels[guild][level] = role.id
         //Save the file
         fs.writeFileSync("./db/levels.json", JSON.stringify(levels))
         //Confirm the level

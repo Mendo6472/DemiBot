@@ -2,8 +2,11 @@
 const fs = require("fs");
 
 async function handleRank(message, ranks){
-    if(!ranks[message.author.id]){
-        ranks[message.author.id] = {
+    if(!ranks[message.guild.id]){
+        ranks[message.guild.id] = {};
+    }
+    if(!ranks[message.guild.id][message.author.id]){
+        ranks[message.guild.id][message.author.id] = {
             xp: 0,
             level: 1,
             nextLevelXp: 300,
@@ -14,20 +17,20 @@ async function handleRank(message, ranks){
             if(err) console.log(err);
         });
     }
-    let lastMessage = ranks[message.author.id].lastMessage;
+    let lastMessage = ranks[message.guild.id][message.author.id].lastMessage;
     if(new Date().getTime() - lastMessage < 60000) return;
     const randomXp = Math.floor(Math.random() * 10) + 1;
-    ranks[message.author.id].xp += randomXp;
-    let userXp = ranks[message.author.id].xp;
-    let userLevel = ranks[message.author.id].level;
-    let nextLevelXp = ranks[message.author.id].nextLevelXp;
+    ranks[message.guild.id][message.author.id].xp += randomXp;
+    let userXp = ranks[message.guild.id][message.author.id].xp;
+    let userLevel = ranks[message.guild.id][message.author.id].level;
+    let nextLevelXp = ranks[message.guild.id][message.author.id].nextLevelXp;
     //Calculate player top position
     let userRank = await getPlayerRank(message.author.id, ranks);
-    ranks[message.author.id].rank = userRank;
+    ranks[message.guild.id][message.author.id].rank = userRank;
 
     //Calculate player level
     if(nextLevelXp <= userXp){
-        let newLevel = ranks[message.author.id].level + 1;
+        let newLevel = ranks[message.guild.id][message.author.id].level + 1;
         ranks[message.author.id].level = newLevel;
         ranks[message.author.id].xp = 0;
         ranks[message.author.id].nextLevelXp = ((userLevel + 11) * 2) ** 2;
@@ -36,8 +39,9 @@ async function handleRank(message, ranks){
         fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
             if(err) console.log(err);
         });
-        if(levels[newLevel]){
-            let newRole = message.guild.roles.cache.get(levels[newLevel]);
+        if(levels[message.guild.id] == null) return;
+        if(levels[message.guild.id][newLevel]){
+            let newRole = message.guild.roles.cache.get(levels[message.guild.id][newLevel]);
             if(newRole == null) return;
             if(message.member.roles.cache.has(newRole.id)) return;
             if(role.rawPosition >= interaction.guild.members.me.roles.highest.position) return;
