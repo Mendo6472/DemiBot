@@ -10,35 +10,33 @@ async function handleRank(message, ranks){
             xp: 0,
             level: 1,
             nextLevelXp: 300,
-            rank: ranks.length + 1,
+            rank: ranks[message.guild.id].length ? ranks[message.guild.id].length + 1 : 1,
             lastMessage: new Date().getTime()
         };
-        fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
-            if(err) console.log(err);
-        });
+        return await saveRank(ranks);
     }
     let lastMessage = ranks[message.guild.id][message.author.id].lastMessage;
     if(new Date().getTime() - lastMessage < 60000) return;
+    console.log("Adding xp");
     const randomXp = Math.floor(Math.random() * 10) + 1;
     ranks[message.guild.id][message.author.id].xp += randomXp;
+    ranks[message.guild.id][message.author.id].lastMessage = new Date().getTime();
     let userXp = ranks[message.guild.id][message.author.id].xp;
     let userLevel = ranks[message.guild.id][message.author.id].level;
     let nextLevelXp = ranks[message.guild.id][message.author.id].nextLevelXp;
     //Calculate player top position
     let userRank = await getPlayerRank(message.author.id, ranks);
     ranks[message.guild.id][message.author.id].rank = userRank;
-
+    await saveRank(ranks);
     //Calculate player level
     if(nextLevelXp <= userXp){
         let newLevel = ranks[message.guild.id][message.author.id].level + 1;
-        ranks[message.author.id].level = newLevel;
-        ranks[message.author.id].xp = 0;
-        ranks[message.author.id].nextLevelXp = ((userLevel + 11) * 2) ** 2;
+        ranks[message.guild.id][message.author.id].level = newLevel;
+        ranks[message.guild.id][message.author.id].xp = 0;
+        ranks[message.guild.id][message.author.id].nextLevelXp = ((userLevel + 11) * 2) ** 2;
         let levels = JSON.parse(fs.readFileSync("./db/levels.json"));
-        message.reply(`You leveled up to level ${ranks[message.author.id].level}`);   
-        fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
-            if(err) console.log(err);
-        });
+        message.reply(`You leveled up to level ${ranks[message.guild.id][message.author.id].level}`);   
+        saveRank(ranks);
         if(levels[message.guild.id] == null) return;
         if(levels[message.guild.id][newLevel]){
             let newRole = message.guild.roles.cache.get(levels[message.guild.id][newLevel]);
@@ -50,7 +48,17 @@ async function handleRank(message, ranks){
     }
 }
 
+async function saveRank(ranks){
+    fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
+        if(err) console.log(err);
+    });
+}
+
 async function getPlayerRank(userId, ranks) {
+    // If there's only one player, return 1
+    if (Object.keys(ranks).length === 1) {
+        return 1;
+    }
     const sortedRanks = Object.keys(ranks).sort((a, b) => {
         const playerA = ranks[a];
         const playerB = ranks[b];
