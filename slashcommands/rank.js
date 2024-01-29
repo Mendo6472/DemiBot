@@ -24,6 +24,7 @@ module.exports = {
         var target = interaction.options.getUser('user');
         //If they didn't choose any user, the target will be the same user who used the interaction
         if(target == null) target = interaction.user;
+        var guild = interaction.guildId;
         //Rank stats
         const rankPath = "./db/rank.json"
         // Read the rank file asynchronously
@@ -36,8 +37,11 @@ module.exports = {
             ranks = {};
         }
         //Check for user in rank file
-        if(ranks[target.id] == null){
-            ranks[message.author.id] = {
+        if(ranks[guild] == null){
+            return await interaction.editReply("This server is not in the rank system yet!");
+        }
+        if(ranks[guild][target.id] == null){
+            ranks[guild][target.id] = {
                 xp: 0,
                 level: 1,
                 nextLevelXp: 300,
@@ -47,10 +51,10 @@ module.exports = {
                 if(err) console.log(err);
             });
         }
-        let userLevel = ranks[target.id].level;
-        let userXp = ranks[target.id].xp;
-        let nextLevelXp = ranks[target.id].nextLevelXp;
-        let userRank = ranks[target.id].rank;
+        let userLevel = ranks[guild][target.id].level;
+        let userXp = ranks[guild][target.id].xp;
+        let nextLevelXp = ranks[guild][target.id].nextLevelXp;
+        let userRank = ranks[guild][target.id].rank;
         let userName = target.username;
         let userAvatar = target.displayAvatarURL({size: 512, extension: "png"});
 
