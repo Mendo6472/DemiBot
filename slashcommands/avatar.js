@@ -19,9 +19,8 @@ module.exports = {
         //Defering reply to avoid timeout
         await interaction.deferReply()
         //Target will be the user inputed into the "user" option on the interaction
-        var target = interaction.options.getUser('user');
         //If they didn't choose any user, the target will be the same user who used the interaction
-        if(target == null) target = interaction.user;
+        var target = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
         //Avatar to display in embed
         const avatar = target.displayAvatarURL({size: 2048});
         try {
