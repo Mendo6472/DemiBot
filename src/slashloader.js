@@ -24,7 +24,7 @@ function Loader(client){
         console.log("Comando '" + slash.data.name + "' cargado...")
     }
     require('dotenv').config();
-    const rest = new REST({ version: "10" }).setToken(process.env.TOKEN); //Token del bot
+    const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN); //Token del bot
     createSlash()
     async function createSlash(){
         try{

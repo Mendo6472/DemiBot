@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Mendo6472/sillybot#readme",
   "dependencies": {
+    "axios": "^1.6.7",
     "booru": "^2.6.4",
     "canvas": "^2.11.2",
     "chokidar": "^3.5.3",
