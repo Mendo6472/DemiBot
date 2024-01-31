@@ -61,7 +61,15 @@ const sendStreamerAlerts = async (messages, streamer, client) => {
             const role = messages[alert].role;
             const twitchLink = `https://twitch.tv/${streamer}`;
             const channel = await client.channels.fetch(channelId);
-            await channel.send(role?`<@&${role}> ${twitchLink} ${message}`:`${twitchLink} ${message}`)
+            if(role){
+                if(role == 'everyone'){
+                    await channel.send(`@everyone ${twitchLink} ${message}`)
+                } else {
+                    await channel.send(`<@&${role}> ${twitchLink} ${message}`)
+                }
+            } else {
+                await channel.send(`${twitchLink} ${message}`)
+            }
         } catch (error) {
             console.error('Error sending streamer alerts:', error.message);
             return false;

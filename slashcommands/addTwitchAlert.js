@@ -72,10 +72,16 @@ module.exports = {
                 messages:[]
             }   
         }
+        if(role){
+            role = role.id;
+            if(role == interaction.guildId){
+                role = "everyone";
+            }
+        }
         twitchAlerts[streamer].messages.push({
             message: message,
             channel: channel.id,
-            role: role ? role.id : null,
+            role: role,
         });
         //Write the file
         fs.writeFile("./db/streamAlerts.json", JSON.stringify(twitchAlerts), (err) => {
