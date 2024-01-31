@@ -7,7 +7,7 @@ module.exports = {
     data: new Discord.SlashCommandBuilder()
     //Command name and description
     .setName("afk")
-    .setDescription("Tell everyone you're afk and left a message")
+    .setDescription("Tell everyone you're afk and leave a message")
     .setDMPermission(false)
     //Command tag option
     .addStringOption(option => 

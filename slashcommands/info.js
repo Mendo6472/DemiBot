@@ -48,6 +48,11 @@ module.exports = {
                     inline: true
                 }
             )
+            //If the command needs certain special permissions, add those permissions to the embed
+            permissions = commandFile.data.default_member_permissions
+            if(permissions != undefined){
+                commandEmbed.addFields({name: "Need special permisions to run command?", value: "Yes"})
+            }
             //If the command has options, add them to the embed
             if(commandFile.data.options.length == 0){
                 commandEmbed.addFields({name: "Options", value: "None"})
