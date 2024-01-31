@@ -7,7 +7,7 @@ module.exports = {
     data: new Discord.SlashCommandBuilder()
     //Command name and description
     .setName("addtwitchalert")
-    .setDescription("Username of the streamer to add the alert to")
+    .setDescription("Add a twitch stream alert to a channel")
     .setDefaultMemberPermissions(Discord.PermissionFlagsBits.ManageRoles, Discord.PermissionFlagsBits.ManageChannels)
     .setDMPermission(false)
     //options
