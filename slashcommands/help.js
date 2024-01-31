@@ -12,8 +12,6 @@ module.exports = {
     async run(client, interaction) {
         //Defering reply to avoid timeout
         await interaction.deferReply()
-        //Get the command from the interaction
-        var command = interaction.options.getString("command")
         //Get the commands folder
         var commandsFolder = fs.readdirSync("./slashcommands")
         //Build embed
