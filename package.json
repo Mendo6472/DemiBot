@@ -1,5 +1,5 @@
 {
-  "name": "sillybot",
+  "name": "demibot",
   "version": "0.0.1",
   "description": "A bot made for the twitch streamer silly dragon",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mendo6472/sillybot.git"
+    "url": "git+https://github.com/Mendo6472/DemiBot.git"
   },
   "author": "Demitard (https://github.com/Mendo6472)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Mendo6472/sillybot/issues"
+    "url": "https://github.com/Mendo6472/DemiBot/issues"
   },
-  "homepage": "https://github.com/Mendo6472/sillybot#readme",
+  "homepage": "https://github.com/Mendo6472/DemiBot#readme",
   "dependencies": {
     "axios": "^1.6.7",
     "booru": "^2.6.4",
@@ -30,5 +30,6 @@
     "moment-duration-format": "^2.3.2",
     "natural": "^6.10.4",
     "os": "^0.1.2"
-  }
+  },
+  "devDependencies": {}
 }
