@@ -3,7 +3,9 @@ const Discord = require('discord.js');
 //fs npm, required to load commands from different folders
 const fs = require('fs').promises;
 //Canvas to build the rank image
-const { createCanvas, loadImage, registerFont } = require('canvas');
+const { createCanvas, loadImage } = require('canvas');
+//Calculate player rank
+const { getPlayerRank } = require('../../src/rankHandler.js');
 
 module.exports = {
     data: new Discord.SlashCommandBuilder()
@@ -24,6 +26,9 @@ module.exports = {
         var target = interaction.options.getUser('user');
         //If they didn't choose any user, the target will be the same user who used the interaction
         if(target == null) target = interaction.user;
+        //If target is a bot, return
+        if(target.bot) return await interaction.editReply("Bots don't have ranks!");
+        //Get the guild id
         var guild = interaction.guildId;
         //Rank stats
         const rankPath = "./db/rank.json"
@@ -41,20 +46,12 @@ module.exports = {
             return await interaction.editReply("This server is not in the rank system yet!");
         }
         if(ranks[guild][target.id] == null){
-            ranks[guild][target.id] = {
-                xp: 0,
-                level: 1,
-                nextLevelXp: 300,
-                lastMessage: new Date().getTime()
-            };
-            fs.writeFile("./db/rank.json", JSON.stringify(ranks), (err) => {
-                if(err) console.log(err);
-            });
+            return await interaction.editReply("This user is not in the rank system yet!");
         }
         let userLevel = ranks[guild][target.id].level;
         let userXp = ranks[guild][target.id].xp;
         let nextLevelXp = ranks[guild][target.id].nextLevelXp;
-        let userRank = ranks[guild][target.id].rank;
+        let userRank = await getPlayerRank(target.id, ranks, guild);
         let userName = target.username;
         let userAvatar = target.displayAvatarURL({size: 512, extension: "png"});
 

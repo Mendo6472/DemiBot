@@ -78,4 +78,5 @@ async function getPlayerRank(userId, ranks, guildId) {
 
 module.exports = {
     handleRank,
+    getPlayerRank,
 }
