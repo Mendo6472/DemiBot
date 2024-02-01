@@ -67,7 +67,13 @@ module.exports = {
     }
 }
 
-function commandSearch(commands, searchQuery, threshold = 0.85) {          
+function commandSearch(commandsFolder, searchQuery, threshold = 0.85) {
+    var commands = [];   
+    for(const folder in commandsFolder){
+        fs.readdirSync("./slashcommands/" + commandsFolder[folder]).forEach((file) => {
+            commands.push(file)
+        })
+    }
     const searchResults = commands.filter((item) => {
         let commandName = item.slice(0, -3);
         const similarity = natural.JaroWinklerDistance(commandName, searchQuery.toLowerCase(), {ignoreCase: true});
