@@ -10,26 +10,32 @@ const ascii = require("ascii-table")
 const gradient = require("gradient-string")
 
 let table = new ascii("Slash Commands")
-table.setHeading("Command", "Load Status")
+table.setHeading("Command", "Type", "Load Status")
 
 function Loader(client){
     //----------File loading----------
     //Loading all commands from the /slashcommands
     client.slashcommands = new Discord.Collection();
-    const slashComandos = fs
-        .readdirSync("./slashcommands")
+
+    fs.readdirSync("./slashcommands/").forEach((folder) => {
+        const slashCommands = fs
+        .readdirSync(`./slashcommands/${folder}/`)
         .filter((file) => file.endsWith(".js"));
-    for (const file of slashComandos) {
-        const slash = require(`../slashcommands/${file}`);
-        client.slashcommands.set(slash.data.name, slash);
-    }
+
+        for (const file of slashCommands) {
+            const slash = require(`../slashcommands/${folder}/${file}`);
+            client.slashcommands.set(slash.data.name, slash);
+        }
+
+        for (const file of slashCommands){
+            const slash = require(`../slashcommands/${folder}/${file}`)
+            commands.push(slash.data.toJSON())
+            table.addRow(slash.data.name, folder, "Loaded")
+        }
+    })
+
     //----------File loading----------
     //----------UPLOADING SLASH COMMANDS TO DISCORD API----------
-    for (const file of slashComandos){
-        const slash = require(`../slashcommands/${file}`)
-        commands.push(slash.data.toJSON())
-        table.addRow(slash.data.name, "Loaded")
-    }
     require('dotenv').config();
     const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN); //Token del bot
     createSlash()
