@@ -5,6 +5,13 @@ const fs = require("fs")
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v10")
 const commands = []
+//Ascii table and gradient
+const ascii = require("ascii-table")
+const gradient = require("gradient-string")
+
+let table = new ascii("Slash Commands")
+table.setHeading("Command", "Load Status")
+
 function Loader(client){
     //----------File loading----------
     //Loading all commands from the /slashcommands
@@ -21,7 +28,7 @@ function Loader(client){
     for (const file of slashComandos){
         const slash = require(`../slashcommands/${file}`)
         commands.push(slash.data.toJSON())
-        console.log("Comando '" + slash.data.name + "' cargado...")
+        table.addRow(slash.data.name, "Loaded")
     }
     require('dotenv').config();
     const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN); //Token del bot
@@ -33,9 +40,10 @@ function Loader(client){
                     body: commands
                 }
             )
-            console.log("Comandos Slash Cargados...")
+            console.log(gradient.rainbow(table.toString()))
         }catch(e){
-        console.error(e)
+            console.log(gradient('orange', 'red')('Error when loading slash commands!'))
+            console.error(e)
         }
     }
     //---------------------------uwu----------------------------

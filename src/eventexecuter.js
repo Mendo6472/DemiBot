@@ -8,12 +8,14 @@ const chokidar = require("chokidar");
 const { handleAFK } = require("./afkHandler.js");
 //Rank handler
 const { handleRank } = require("./rankHandler.js");
+//Gradient
+const gradient = require("gradient-string");
 
 //Function to handle discord client events
 async function Eventexecuter(client){
     //Event when the client "turns on"
     client.on('ready', () => {
-        console.log(`Logged in as ${client.user.tag}!`);
+        console.log(gradient('pink','purple')(`Bot is online! Logged in as ${client.user.tag}`));
         //TODO: Add status to bot
     });
     const afkPath = "./db/afk.json"
