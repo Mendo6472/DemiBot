@@ -35,7 +35,8 @@ module.exports = {
         const commandEmbed = new Discord.EmbedBuilder()
             .setTitle("Command information")
             .setDescription("Information about the command: " + commandFile.data.name)
-            .setColor("#761180")
+            .setColor(client.color)
+            .setAuthor({name: client.user.username, iconURL: client.user.avatarURL({dynamic: true}), url: client.github})
             .addFields(
                 {
                     name: "Name",
