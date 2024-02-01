@@ -15,7 +15,9 @@ const client = new Discord.Client({
     ],
     partials: [Discord.Partials.Channel],
 })
-
+//Saving variables to the client
+client.color = "#761180";
+client.github = "https://github.com/Mendo6472/DemiBot"
 //----------File loading----------
 //Executing /src/slashloader.js
 Loader(client);
