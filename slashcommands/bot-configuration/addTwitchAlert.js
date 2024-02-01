@@ -93,7 +93,7 @@ module.exports = {
         //Send success message
         const successEmbed = new Discord.EmbedBuilder()
             .setTitle("✅ | Success")
-            .setColor("#00fc3b")
+            .setColor(client.color)
             .setDescription(`Added ${streamer} to the alerts system!`)
         await interaction.editReply({embeds:[successEmbed], ephemeral: true });
     }

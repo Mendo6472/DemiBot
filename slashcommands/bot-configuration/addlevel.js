@@ -68,7 +68,7 @@ module.exports = {
         //Confirm the level
         const confirmEmbed = new Discord.EmbedBuilder()
             .setTitle("✅ | Success")
-            .setColor("#00fc3b")
+            .setColor(client.color)
             .setDescription("Level " + level + " added to the rank system")
         await interaction.editReply({embeds:[confirmEmbed]});    
     }

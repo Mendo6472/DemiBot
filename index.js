@@ -1,7 +1,5 @@
 //Discord npm
 const Discord = require('discord.js');
-//fs npm, required to load commands from different folders
-const fs = require('fs');
 //Files from src folder, used to load slash commands, handle client events and twitch api
 const { Loader } = require("./src/slashloader.js");
 const { Eventexecuter } = require("./src/eventexecuter.js")
