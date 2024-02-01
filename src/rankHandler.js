@@ -24,9 +24,8 @@ async function handleRank(message, ranks){
     let userLevel = ranks[message.guild.id][message.author.id].level;
     let nextLevelXp = ranks[message.guild.id][message.author.id].nextLevelXp;
     //Calculate player top position
-    let userRank = await getPlayerRank(message.author.id, ranks);
+    let userRank = await getPlayerRank(message.author.id, ranks, message.guild.id);
     ranks[message.guild.id][message.author.id].rank = userRank;
-    await saveRank(ranks);
     //Calculate player level
     if(nextLevelXp <= userXp){
         let newLevel = ranks[message.guild.id][message.author.id].level + 1;
@@ -44,6 +43,8 @@ async function handleRank(message, ranks){
             if(role.rawPosition >= interaction.guild.members.me.roles.highest.position) return;
             message.member.roles.add(newRole);
         }
+    } else {
+        await saveRank(ranks);
     }
 }
 
@@ -53,14 +54,14 @@ async function saveRank(ranks){
     });
 }
 
-async function getPlayerRank(userId, ranks) {
+async function getPlayerRank(userId, ranks, guildId) {
     // If there's only one player, return 1
-    if (Object.keys(ranks).length === 1) {
+    if (Object.keys(ranks[guildId]).length === 1) {
         return 1;
     }
-    const sortedRanks = Object.keys(ranks).sort((a, b) => {
-        const playerA = ranks[a];
-        const playerB = ranks[b];
+    const sortedRanks = Object.keys(ranks[guildId]).sort((a, b) => {
+        const playerA = ranks[guildId][a];
+        const playerB = ranks[guildId][b];
 
         if (playerA.level !== playerB.level) {
             return playerB.level - playerA.level; // Sort by level first
