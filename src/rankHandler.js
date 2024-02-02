@@ -17,7 +17,7 @@ async function handleRank(message, ranks){
     }
     let lastMessage = ranks[message.guild.id][message.author.id].lastMessage;
     if(new Date().getTime() - lastMessage < 60000) return;
-    const randomXp = Math.floor(Math.random() * 10) + 1;
+    const randomXp = Math.floor(Math.random() * 15) + 1;
     ranks[message.guild.id][message.author.id].xp += randomXp;
     ranks[message.guild.id][message.author.id].lastMessage = new Date().getTime();
     let userXp = ranks[message.guild.id][message.author.id].xp;
