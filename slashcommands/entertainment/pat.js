@@ -7,7 +7,7 @@ module.exports = {
     data: new Discord.SlashCommandBuilder()
     //Command name and description
     .setName("pat")
-    .setDescription("Give headpaats to someone!")
+    .setDescription("Give headpats to someone!")
     .setDMPermission(false)
     //Command user option
     .addUserOption(option =>

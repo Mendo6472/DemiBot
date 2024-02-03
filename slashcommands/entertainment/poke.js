@@ -23,7 +23,7 @@ module.exports = {
         var responseString = "";
         //If they choosed themselves, make the message different
         if(target.id == interaction.user.id){
-            responseString = `<@${interaction.user.id}> pojed themselves!`;
+            responseString = `<@${interaction.user.id}> poked themselves!`;
         }
         //If they choosed the bot, make the message different
         if(target.id == client.user.id){
