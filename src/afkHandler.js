@@ -3,10 +3,11 @@ const afkPath = "./db/afk.json"
 
 // Function to handle AFK related logic
 async function handleAFK(message, afk) {
-    // Check if afk user talked
+    // Check if the afk JSON has a key for the guild
     if (afk[message.guild.id] == null) {
         return;
     }
+    // Check if the user is afk
     if (afk[message.guild.id][message.author.id] != null) {
         // If they are, remove them from the afk list
         delete afk[message.guild.id][message.author.id];
@@ -16,7 +17,7 @@ async function handleAFK(message, afk) {
         message.reply("You are no longer afk");
     }
 
-    // Check if the message mentions an afk user
+    // Check if the message mentions any users
     if (message.mentions.users.size == 0) {
         return;
     }
@@ -25,16 +26,17 @@ async function handleAFK(message, afk) {
     let mentionedAfkUser = null;
     let amountOfAfkUsersMentioned = 0;
     for (const [userId, user] of message.mentions.users.entries()) {
-        if (afk[userId] != null) {
+        if (afk[message.guild.id][userId] != null) {
             mentionedAfkUser = user;
             amountOfAfkUsersMentioned++;
         }
     }
-
+    // If only one user is afk, alert the user
     if (amountOfAfkUsersMentioned === 1) {
-        message.channel.send(`${mentionedAfkUser.username} is AFK: ${afk[mentionedAfkUser.id]}`);
+        message.channel.reply(`${mentionedAfkUser.username} is AFK: ${afk[message.guild.id][mentionedAfkUser.id]}`);
+    // If multiple users are afk, alert the user
     } else if (amountOfAfkUsersMentioned > 1) {
-        message.channel.send("Multiple users that you have mentioned are AFK.");
+        message.channel.reply("Multiple users that you have mentioned are AFK.");
     }
 }
 
