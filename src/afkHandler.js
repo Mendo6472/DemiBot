@@ -33,10 +33,10 @@ async function handleAFK(message, afk) {
     }
     // If only one user is afk, alert the user
     if (amountOfAfkUsersMentioned === 1) {
-        message.channel.reply(`${mentionedAfkUser.username} is AFK: ${afk[message.guild.id][mentionedAfkUser.id]}`);
+        message.reply(`${mentionedAfkUser.username} is AFK: ${afk[message.guild.id][mentionedAfkUser.id]}`);
     // If multiple users are afk, alert the user
     } else if (amountOfAfkUsersMentioned > 1) {
-        message.channel.reply("Multiple users that you have mentioned are AFK.");
+        messages.reply("Multiple users that you have mentioned are AFK.");
     }
 }
 
