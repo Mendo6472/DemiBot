@@ -15,12 +15,11 @@ const checkStreamersStatus = async (client) => {
     for (const streamer in streamers) {
         //Check if the streamer is live
         const streamId = await checkStreamerStatus(streamers[streamer], streamer, client)
-        if(streamId != false){
-            streamers[streamer].lastStreamId = streamId;
-            fs.writeFileSync("./db/streamAlerts.json", JSON.stringify(streamers, null, 4)),(err) => {
-                if(err){
-                    console.error(err);
-                }
+        if(streamId == false) return;
+        streamers[streamer].lastStreamId = streamId;
+        fs.writeFileSync("./db/streamAlerts.json", JSON.stringify(streamers, null, 4)),(err) => {
+            if(err){
+                console.error(err);
             }
         }
     }
@@ -50,6 +49,7 @@ const checkStreamerStatus = async (alertInfo, streamer, client) => {
         return false
     } catch (error) {
         console.error('Error checking streamer status:', error.message);
+        return false
     } 
 }
 
