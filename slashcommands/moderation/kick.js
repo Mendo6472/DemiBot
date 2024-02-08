@@ -74,7 +74,7 @@ module.exports = {
                     .addFields({ name: "▸ 📄 Reason", value: `>>> ${reason}` })
                     .setColor(client.color)
                     .setTimestamp()
-                await target.send({ embeds: [dmEmbed] })
+                target.send({ embeds: [dmEmbed] })
             }
             //Send a reply to the interaction
             const kickEmbed = new Discord.EmbedBuilder()
@@ -86,7 +86,7 @@ module.exports = {
               .setColor(client.color)
               .setTimestamp()
       
-            await interaction.reply({ embeds: [kickEmbed], ephemeral: false})
+            interaction.reply({ embeds: [kickEmbed], ephemeral: false})
           } catch (error) {
             errorEmbed.setDescription("An error has ocurred when trying to kick this user")
             await interaction.reply({ embeds:[errorEmbed], ephemeral: true})
