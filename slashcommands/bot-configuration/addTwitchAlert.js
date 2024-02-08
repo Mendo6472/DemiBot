@@ -72,6 +72,13 @@ module.exports = {
                 messages:[]
             }   
         }
+        //Check if streamer has a message in the channel
+        for(var i = 0; i < twitchAlerts[streamer].messages.length; i++){
+            if(twitchAlerts[streamer].messages[i].channel == channel.id){
+                errorEmbed.setDescription("That streamer already has a message in that channel!");
+                return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
+            }
+        }
         if(role){
             role = role.id;
             if(role == interaction.guildId){
