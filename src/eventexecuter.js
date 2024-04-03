@@ -9,6 +9,9 @@ const { handleAFK } = require("./afkHandler.js");
 //Rank handler
 const { handleRank } = require("./rankHandler.js");
 //Gradient
+//Twitch token Getter
+const { getTwitchToken } = require("./twitchTokenGetter.js");
+//Gradient  
 const gradient = require("gradient-string");
 
 //Function to handle discord client events
@@ -18,6 +21,10 @@ async function Eventexecuter(client){
         console.log(gradient('pink','purple')(`Bot is online! Logged in as ${client.user.tag}`));
         //TODO: Add status to bot
     });
+    //Get twitch tokens
+    const twitchToken = await getTwitchToken();
+    client.twitchToken = twitchToken;
+    //Path to the afk file
     const afkPath = "./db/afk.json"
     const rankPath = "./db/rank.json"
     // Read the afk file asynchronously

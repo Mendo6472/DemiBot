@@ -37,12 +37,12 @@ function Loader(client){
     //----------File loading----------
     //----------UPLOADING SLASH COMMANDS TO DISCORD API----------
     require('dotenv').config();
-    const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN); //Token del bot
+    const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN);
     createSlash()
     async function createSlash(){
         try{
             await rest.put(
-                Routes.applicationCommands("1195181006718771312"),{
+                Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID),{
                     body: commands
                 }
             )
@@ -52,7 +52,7 @@ function Loader(client){
             console.error(e)
         }
     }
-    //---------------------------uwu----------------------------
+    //----------------------------------------------------------
 }
 module.exports = {
 Loader,

@@ -3,7 +3,6 @@ const fs = require('fs');
 require('dotenv').config();
 
 const clientId = process.env.TWITCH_CLIENT_ID;
-const twitchToken = process.env.TWITCH_TOKEN;
 
 // Function to check if the streamers are live 
 const checkStreamersStatus = async (client) => {
@@ -29,6 +28,7 @@ const checkStreamersStatus = async (client) => {
 const checkStreamerStatus = async (alertInfo, streamer, client) => {
     try {
         const lastStreamId = alertInfo.lastStreamId;
+        const twitchToken = client.twitchToken;
 
         const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${streamer}`, {
             headers: {
@@ -50,6 +50,7 @@ const checkStreamerStatus = async (alertInfo, streamer, client) => {
         return false
     } catch (error) {
         console.error('Error checking streamer status:', error.message);
+        console.error(error)
         return false
     } 
 }
@@ -73,7 +74,6 @@ const sendStreamerAlerts = async (messages, streamer, client) => {
             }
         } catch (error) {
             console.error('Error sending streamer alerts:', error.message);
-            return false;
         }
     }
     return true;
