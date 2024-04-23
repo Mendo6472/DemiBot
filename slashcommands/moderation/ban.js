@@ -72,14 +72,13 @@ module.exports = {
             }
             //Send a reply to the interaction
             const kickEmbed = new Discord.EmbedBuilder()
-              .setTitle("🔨 | Ban")
-              .setThumbnail(`https://cdn.discordapp.com/avatars/${target.id}/${target.avatar}`)
-              .setDescription(`An user has been banned in this server.`)
-              .addFields({ name: `▸ 👤 User`, value: `>>> **Username:** ${target.username}\n**ID:** ${target.id}` })
-              .addFields({ name: `▸ 📄 Reason`, value: `>>> ${reason}` })
-              .setColor(client.color)
-              .setTimestamp()
-      
+                .setTitle("🔨 | Ban")
+                .setThumbnail(`https://cdn.discordapp.com/avatars/${target.id}/${target.avatar}`)
+                .setDescription(`An user has been banned in this server.`)
+                .addFields({ name: `▸ 👤 User`, value: `>>> **Username:** ${target.username}\n**ID:** ${target.id}` })
+                .addFields({ name: `▸ 📄 Reason`, value: `>>> ${reason}` })
+                .setColor(client.color)
+                .setTimestamp()
             interaction.reply({ embeds: [kickEmbed], ephemeral: false})
           } catch (error) {
             errorEmbed.setDescription("An error has ocurred when trying to ban this user")
