@@ -1,7 +1,5 @@
 //Discord npm
 const Discord = require("discord.js")
-//fs
-const fs = require("fs")
 
 module.exports = {
     data: new Discord.SlashCommandBuilder()
@@ -33,16 +31,13 @@ module.exports = {
         var role = interaction.options.getRole("role")
         var guild = interaction.guildId
 
-        //Get the levels file
-        var levelsFile = fs.readFileSync("./db/levels.json")
-        //Parse the file
-        var levels = JSON.parse(levelsFile)
-        //Check if the server is already in the rank system
-        if(levels[guild] == null){
-            levels[guild] = {}
-        }
+        //Get levels collection
+        const collectionName = "levels";
+        const collection = client.db.collection(collectionName);
+        //Get levels from the database
+        var levels = await collection.find({guild_id: guild}).toArray();
         //Check if the level is already in the rank system
-        if(levels[guild][level] != null){
+        if(levels.find(l => l.level == level)){
             errorEmbed.setDescription("That level is already in the rank system!");
             return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
         }
@@ -57,15 +52,12 @@ module.exports = {
             return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
         }
         //Check if the role is already on the rank system
-        if(Object.values(levels).includes(role.id)){
+        if(levels.find(l => l.role_id == role.id)){
             errorEmbed.setDescription("That role is already in the rank system!");
             return await interaction.editReply({ embeds:[errorEmbed], ephemeral: true });
         }
         //Add the level to the rank system
-        levels[guild][level] = role.id
-        //Save the file
-        fs.writeFileSync("./db/levels.json", JSON.stringify(levels))
-        //Confirm the level
+        await collection.insertOne({guild_id: guild, level: level, role_id: role.id});
         const confirmEmbed = new Discord.EmbedBuilder()
             .setTitle("✅ | Success")
             .setColor(client.color)
