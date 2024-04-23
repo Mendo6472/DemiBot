@@ -66,7 +66,7 @@ module.exports = {
         const alert = await collection.findOne({ streamer_name: streamer })
         //Check if streamer has a message in the channel
         if(alert){
-            if(alert.messages.toArray().find(channel_id == channel.id)){
+            if(alert.messages.find(message => message.channel === channel.id)){
                 errorEmbed.setDescription("That streamer already has a message in that channel!");
                 return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
             }
