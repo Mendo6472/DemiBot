@@ -8,11 +8,12 @@ const chokidar = require("chokidar");
 const { handleAFK } = require("./afkHandler.js");
 //Rank handler
 const { handleRank } = require("./rankHandler.js");
-//Gradient
 //Twitch token Getter
 const { getTwitchToken } = require("./twitchTokenGetter.js");
 //Gradient  
 const gradient = require("gradient-string");
+//MongoDB
+const { MongoClient } = require('mongodb');
 
 //Function to handle discord client events
 async function Eventexecuter(client){
@@ -24,35 +25,23 @@ async function Eventexecuter(client){
     //Get twitch tokens
     const twitchToken = await getTwitchToken();
     client.twitchToken = twitchToken;
-    //Path to the afk file
-    const afkPath = "./db/afk.json"
-    const rankPath = "./db/rank.json"
-    // Read the afk file asynchronously
-    let afk;
-    try {
-        const afkFile = await fs.readFile(afkPath, 'utf-8');
-        afk = JSON.parse(afkFile);
-    } catch (error) {
-        console.error("Error reading afk file:", error);
-        afk = {};
-    }
-
-    // Read the rank file asynchronously
-    let rank;
-    try {
-        const rankFile = await fs.readFile(rankPath, 'utf-8');
-        rank = JSON.parse(rankFile);
-    } catch (error) {
-        console.error("Error reading rank file:", error);
-        rank = {};
-    }
+    //Create mongoDB client
+    let uri = process.env.MONGODB_URI;
+    const username = encodeURIComponent(process.env.MONGODB_USERNAME);
+    const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
+    uri = uri.replace("<username>", username).replace("<password>", password);
+    const clientMongo = new MongoClient(uri);
+    //Connect to the client
+    await clientMongo.connect();
+    client.mongo = clientMongo;
+    client.db = clientMongo.db("DemiBot");
 
     //Event to execute when the discord client receives a message
     client.on('messageCreate', (message) => {
         if(message.author.bot) return;
         if(message.channel.type === "dm") return;
-        handleAFK(message, afk);
-        handleRank(message, rank);      
+        handleAFK(message, client);
+        handleRank(message, client);      
     });
     //Event to execute when a slash command is used
     client.on("interactionCreate", async (interaction) => {
@@ -69,26 +58,6 @@ async function Eventexecuter(client){
     //Event to execute when the discord client faces an error
     client.on('error',(error) =>{
         console.log(error);
-    });
-    //Event to execute when the afk file is changed
-    const afkWatcher = chokidar.watch(afkPath);
-    afkWatcher.on('change', async () => {
-        try {
-            const afkFile = await fs.readFile(afkPath, 'utf-8');
-            afk = JSON.parse(afkFile);
-        } catch (error) {
-            console.error("Error reading afk file:", error);
-        }
-    });
-
-    const rankWatcher = chokidar.watch(rankPath);
-    rankWatcher.on('change', async () => {
-        try {
-            const rankFile = await fs.readFile(rankPath, 'utf-8');
-            rank = JSON.parse(rankFile);
-        } catch (error) {
-            console.error("Error reading rank file:", error);
-        }
     });
 }
 //Exporting the Eventexecuter funtion
