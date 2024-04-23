@@ -1,7 +1,5 @@
 // Discord npm
 const Discord = require("discord.js");
-// fs
-const fs = require("fs");
 
 module.exports = {
     data: new Discord.SlashCommandBuilder()

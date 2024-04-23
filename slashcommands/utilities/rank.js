@@ -29,29 +29,17 @@ module.exports = {
         //If target is a bot, return
         if(target.bot) return await interaction.editReply("Bots don't have ranks!");
         //Get the guild id
-        var guild = interaction.guildId;
-        //Rank stats
-        const rankPath = "./db/rank.json"
-        // Read the rank file asynchronously
-        let ranks;
-        try {
-            const rankFile = await fs.readFile(rankPath, 'utf-8');
-            ranks = JSON.parse(rankFile);
-        } catch (error) {
-            console.error("Error reading rank file:", error);
-            ranks = {};
-        }
-        //Check for user in rank file
-        if(ranks[guild] == null){
-            return await interaction.editReply("This server is not in the rank system yet!");
-        }
-        if(ranks[guild][target.id] == null){
-            return await interaction.editReply("This user is not in the rank system yet!");
-        }
-        let userLevel = ranks[guild][target.id].level;
-        let userXp = ranks[guild][target.id].xp;
-        let nextLevelXp = ranks[guild][target.id].nextLevelXp;
-        let userRank = await getPlayerRank(target.id, ranks, guild);
+        const guildId = interaction.guildId;
+        const userId = target.id;
+        const collectionName = "rank";
+        const collection = client.db.collection(collectionName);
+        //Check for user in rank collection
+        const user = await collection.findOne({ user_id: userId, guild_id: guildId });
+        if (!user) { return await interaction.editReply("This user doesn't have a rank yet!"); }
+        let userLevel = user.level;
+        let userXp = user.xp;
+        let nextLevelXp = user.nextLevelXp;
+        let userRank = await getPlayerRank(target.id, collection, guildId);
         let userName = target.username;
         let userAvatar = target.displayAvatarURL({size: 512, extension: "png"});
 
