@@ -1,7 +1,5 @@
 //Discord npm
 const Discord = require("discord.js")
-//fs
-const fs = require("fs")
 
 module.exports = {
     data: new Discord.SlashCommandBuilder()
@@ -61,20 +59,14 @@ module.exports = {
         //    errorEmbed.setDescription("That role is not pingable!");
         //    return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
         //}
-        //Get the twitch alerts file
-        var twitchAlertsFile = fs.readFileSync("./db/streamAlerts.json")
-        //Parse the file
-        var twitchAlerts = JSON.parse(twitchAlertsFile)
+        //Get the twitch alerts collection
+        const collectionName = "streamAlerts"
+        const collection = client.db.collection(collectionName)
         //Check if the streamer isn't in the system
-        if(twitchAlerts[streamer] == null){
-            twitchAlerts[streamer] = {
-                lastStreamId: null,
-                messages:[]
-            }   
-        }
+        const alert = await collection.findOne({ streamer_name: streamer })
         //Check if streamer has a message in the channel
-        for(var i = 0; i < twitchAlerts[streamer].messages.length; i++){
-            if(twitchAlerts[streamer].messages[i].channel == channel.id){
+        if(alert){
+            if(alert.messages.toArray().find(channel_id == channel.id)){
                 errorEmbed.setDescription("That streamer already has a message in that channel!");
                 return await interaction.editReply({embeds:[errorEmbed], ephemeral: true });
             }
@@ -85,18 +77,10 @@ module.exports = {
                 role = "everyone";
             }
         }
-        twitchAlerts[streamer].messages.push({
-            message: message,
-            channel: channel.id,
-            role: role,
-        });
-        //Write the file
-        fs.writeFile("./db/streamAlerts.json", JSON.stringify(twitchAlerts), (err) => {
-            if(err){
-                errorEmbed.setDescription("There was an error adding the streamer to the alerts system!");
-                return interaction.editReply({embeds:[errorEmbed], ephemeral: true });   
-            }
-        });
+        
+        await collection.updateOne(
+            { streamer_name: streamer }, { $push: { messages: { message: message, channel: channel.id, role: role } } }, { upsert: true }
+          );
         //Send success message
         const successEmbed = new Discord.EmbedBuilder()
             .setTitle("✅ | Success")

@@ -6,21 +6,16 @@ const clientId = process.env.TWITCH_CLIENT_ID;
 
 // Function to check if the streamers are live 
 const checkStreamersStatus = async (client) => {
-    //Load the streamers file
-    var streamersFile = fs.readFileSync("./db/streamAlerts.json")
-    //Parse the file
-    var streamers = JSON.parse(streamersFile)
+    //Get the streamers from the db
+    const collectionName = "streamAlerts";
+    const collection = client.db.collection(collectionName);
+    const streamers = await collection.find().toArray();
     //Loop through all the streamers
     for (const streamer in streamers) {
         //Check if the streamer is live
-        const streamId = await checkStreamerStatus(streamers[streamer], streamer, client)
+        const streamId = await checkStreamerStatus(streamers[streamer], streamers[streamer].streamer_name, client)
         if(streamId != false){
-            streamers[streamer].lastStreamId = streamId;
-            fs.writeFileSync("./db/streamAlerts.json", JSON.stringify(streamers, null, 4)),(err) => {
-                if(err){
-                    console.error(err);
-                }
-            }
+            await collection.updateOne({streamer_name: streamers[streamer].streamer_name}, { $set: {lastStreamId: streamId} });
         }
     }
 };
