@@ -1,6 +1,3 @@
-//fs
-const fs = require("fs");
-
 async function handleRank(message, client){
     const guildId = message.guild.id;
     const userId = message.author.id;

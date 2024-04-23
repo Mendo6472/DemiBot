@@ -1,6 +1,3 @@
-const fs = require('fs');
-const afkPath = "./db/afk.json"
-
 // Function to handle AFK related logic
 async function handleAFK(message, client) {
     const collectionName = "afk";
@@ -17,8 +14,6 @@ async function handleAFK(message, client) {
     }
 
     // Check if one of the users mentioned is afk
-    let mentionedAfkUser = null;
-    let amountOfAfkUsersMentioned = 0;
     const [userId] = message.mentions.users.entries();
     const usersResult = await collection.find({ user_id: { $in: userId }, guild_id: message.guild.id }).toArray();
     // If only one user is afk, alert the user

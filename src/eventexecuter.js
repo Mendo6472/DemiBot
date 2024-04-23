@@ -1,9 +1,3 @@
-//Discord npm
-const Discord = require("discord.js")
-//Load files
-const fs = require("fs").promises;
-//File watching
-const chokidar = require("chokidar");
 //Afk handler
 const { handleAFK } = require("./afkHandler.js");
 //Rank handler
@@ -13,7 +7,7 @@ const { getTwitchToken } = require("./twitchTokenGetter.js");
 //Gradient  
 const gradient = require("gradient-string");
 //MongoDB
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
 
 //Function to handle discord client events
 async function Eventexecuter(client){
