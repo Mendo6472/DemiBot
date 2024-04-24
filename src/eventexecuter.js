@@ -2,10 +2,13 @@
 const { handleAFK } = require("./afkHandler.js");
 //Rank handler
 const { handleRank } = require("./rankHandler.js");
+//New user handler
+const { handleNewUser } = require("./newUserHandler.js");
 //Twitch token Getter
 const { getTwitchToken } = require("./twitchTokenGetter.js");
 //Gradient  
 const gradient = require("gradient-string");
+
 //MongoDB
 const { MongoClient } = require("mongodb");
 
@@ -48,6 +51,11 @@ async function Eventexecuter(client){
             console.log("Error running slash command: ", interaction.commandName);
             console.log(e);
         }
+    });
+    //Event to execute when a new user joins a server
+    client.on('guildMemberAdd', (member) =>{
+        handleNewUser(client, member);
+
     });
     //Event to execute when the discord client faces an error
     client.on('error',(error) =>{
